@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-twinkle,
+  .animate-sway,
+  .animate-glow,
+  .animate-sparkle,
+  .animate-shimmer,
+  .animate-float {
+    animation: none !important;
+  }
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Visible keyboard focus everywhere — accessibility floor */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid #c9a227;
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+
+::selection {
+  background: rgba(201, 162, 39, 0.3);
+}

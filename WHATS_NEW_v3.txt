@@ -1,0 +1,25 @@
+═══════════════════════════════════════════════════════════════
+  LATEST CHANGES (v3.1)
+═══════════════════════════════════════════════════════════════
+• Scratch card: lighter, warm background under the foil (no more
+  dark maroon). Confetti now fires at 60% scratched.
+• Envelope seal: the "+" is now ੴ (Ik Onkar).
+• Opening animation: the letter is sized with padded, centered
+  text so the names no longer spill over its edges.
+• Falling decorations are now FLOWERS and LEAVES only (no plain
+  petals), and there are many more of them across every section.
+• Greenery: lush fern/foliage sprays now frame the main blessing
+  page (all four corners) and the events area, matching your
+  reference invitation.
+• Event couple illustration redrawn in maroon wedding attire
+  (sherwani + lehenga) to match your caricature reference.
+
+ABOUT YOUR CARICATURE FILES
+I can SEE the caricature you shared, but I can't save that image
+into the project for you — it has to be added as a file. Drop your
+PNGs in  public/images/  named:
+   haldi.png  sangeet.png  anand-karaj.png  reception.png
+They appear automatically on each event card. Until then, each card
+shows the built-in maroon-attire couple illustration.
+(See public/images/README.txt.)
+═══════════════════════════════════════════════════════════════

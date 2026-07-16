@@ -1,0 +1,75 @@
+WHAT'S NEW — v4
+================
+
+All changes are content-driven from src/data/weddingData.ts wherever possible.
+
+1.  HALDI ADDRESS
+    Added 5404 Amber Circle, Calabasas, CA 91302 to the Haldi event. It now
+    shows the address, a View Location (Google Maps) button, Add to Calendar,
+    and Copy Address — exactly like the other events. Shown as a plain address
+    (not labelled "Residence").
+
+2.  SPELLING
+    "Anand Kaaraj" -> "Anand Karaj" on the events page.
+
+3.  TIMING BOXES REMOVED
+    The little schedule/time boxes are gone from every event.
+
+4.  "SAVE THE DATE" (above Scratch to Reveal) removed — kept only once.
+
+5.  SCRATCH CARD
+    Foil now reads "The Day of Celebration" (was "scratch here to reveal…").
+    Two gold diamonds now flank the card on each side for a royal touch.
+
+6.  GRANDPARENTS
+    Added under each parent line on the main invitation:
+      Bride:  G D/o Sdn. Yashpal Kaur & S. Uttam Singh
+      Groom:  G S/o Sdn. Prabha Sukhija & S. Rajinder Singh Sukhija
+
+7.  COUPLE PHOTO
+    Your photo now sits between the Scratch/Countdown block and the Events
+    schedule, in an arched gold frame with floral flourishes. To change the
+    photo later, just replace  public/images/couple.jpg  (no code changes).
+
+8.  EVENT LABELS
+    Sangeet:  "Sangeet" is now the prominent label, "Mughal Nights" the small
+              line beneath, with their fonts/colours swapped.
+    Haldi:    "Golden Hours" added beneath "Haldi & Mehendi".
+
+9.  ENVELOPE / OPENING
+    Removed "The Wedding Invitation Of" and "Wedding Date Coming Soon" from the
+    landing page (names kept). The opening animation was rebuilt from scratch so
+    the card rises straight up, dead-centre, and grows smoothly — no more
+    off-to-the-right jump.
+
+10. Opening card now shows only the ੴ symbol + "You are Invited".
+
+11. Removed the "Ik Onkar" text on the main page (symbol kept).
+
+12. Removed "With Love & Anticipation" above the RSVP.
+
+13. RSVP paragraph is now Cormorant Garamond in a darker shade.
+
+14. NOTE FOR GIFTS
+    New oval next to the RSVP button. Clicking it opens a small popup that
+    says "No Need". (Copy can be changed later in RSVPSection.tsx.)
+
+15. EVENT DECORATIONS (ambient, on-theme, per event)
+    Reception  -> warm blinking string / fairy lights
+    Sangeet    -> jewel-tone hanging lights + popping sparkles
+    Haldi      -> swaying marigold garland strands + soft morning-sun glow
+    Anand Karaj-> drifting flower petals under a faint sacred arch
+    All animations switch off automatically for reduced-motion users.
+
+16. FLOWERS (main page)
+    The thin "cobweb" greenery is gone. New hand-built, layered watercolor-
+    style floral sprays (peonies, bougainvillea, garden roses, buds, filler
+    blooms + full foliage) now frame the main invitation and the save-the-date
+    section, cascading from each corner.
+
+NOTES
+-----
+- Event banner caricatures still fall back to the built-in illustrated couple.
+  Drop your final PNGs into public/images/ (haldi.png, sangeet.png,
+  anand-karaj.png, reception.png) and they appear automatically.
+- Run locally:  npm install  then  npm run dev
