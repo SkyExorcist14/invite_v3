@@ -10,10 +10,10 @@ export const couple = {
   groomFirst: "Mohit",
   brideFull: "Jassimran Kaur Arora",
   brideParents: "D/o Sdn. Kamaldeev Kaur & S. Taranjeet Singh",
-  brideGrandparents: "G D/o Sdn. Yashpal Kaur & S. Uttam Singh",
+  brideGrandparents: "GD/o Sdn. Yashpal Kaur & S. Uttam Singh",
   groomFull: "Mohit Singh Sukhija",
   groomParents: "S/o Sdn. Anuradha Sukhija & S. Karanjit Singh Sukhija",
-  groomGrandparents: "G S/o Sdn. Prabha Sukhija & S. Rajinder Singh Sukhija",
+  groomGrandparents: "GS/o Sdn. Prabha Sukhija & S. Rajinder Singh Sukhija",
 };
 
 // The real wedding date — used by the countdown timer & the scratch card.
@@ -68,11 +68,11 @@ export const events: WeddingEvent[] = [
     id: "haldi",
     title: "Haldi Hai Rachne Wali",
     subtitle: "Golden Hours",
-    tagline: "A morning of turmeric, laughter, and blessings.",
+    tagline: "An afternoon of turmeric, laughter, and blessings.",
     date: "Wednesday, 9th June 2027",
-    time: "10:00 AM",
-    startIso: "2027-06-09T10:00:00-07:00",
-    endIso: "2027-06-09T13:00:00-07:00",
+    time: "2:00 PM",
+    startIso: "2027-06-09T14:00:00-07:00",
+    endIso: "2027-06-09T17:00:00-07:00",
     venueAddress: "5404 Amber Circle, Calabasas, CA 91302",
     theme: "Haldi & Mehendi",
     designNote: "Soft florals, morning sunlight, pastel turmeric hues.",

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import FloatingPetals from "./FloatingPetals";
+import FloatingLanterns from "./FloatingLanterns";
 import OrnamentalDivider from "./OrnamentalDivider";
 import FloralSpray from "./FloralSpray";
 import { couple } from "@/data/weddingData";
@@ -17,6 +18,9 @@ const fadeUp = {
 export default function MainInvitation() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-b from-ivory-50 via-ivory-100 to-ivory-200 px-5 py-16 sm:px-6 sm:py-24">
+      {/* warm sky lanterns drifting up behind everything */}
+      <FloatingLanterns count={7} />
+
       <FloatingPetals colors={HERO_PETAL_COLORS} count={26} />
 
       {/* lush floral corners framing the whole section (bougainvillea + peonies) */}

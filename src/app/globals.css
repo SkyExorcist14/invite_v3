@@ -6,6 +6,29 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Sky lanterns drifting slowly upward (used by FloatingLanterns) */
+@keyframes lanternRise {
+  0% {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-140px);
+    opacity: 0;
+  }
+}
+.lantern-rise {
+  animation-name: lanternRise;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -15,7 +38,8 @@ html {
   .animate-glow,
   .animate-sparkle,
   .animate-shimmer,
-  .animate-float {
+  .animate-float,
+  .lantern-rise {
     animation: none !important;
   }
 }

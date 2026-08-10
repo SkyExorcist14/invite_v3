@@ -105,10 +105,6 @@ export default function ScratchDateReveal({ onReveal }: ScratchDateRevealProps) 
     ctx.textBaseline = "middle";
     ctx.font = `600 ${Math.min(24, rect.width / 13)}px Georgia, serif`;
     ctx.fillText("The Day of Celebration", rect.width / 2, rect.height / 2 - 4);
-    // small sparkles framing the line
-    ctx.font = `${Math.min(16, rect.width / 20)}px Georgia, serif`;
-    ctx.fillText("✦", rect.width / 2 - Math.min(120, rect.width / 3), rect.height / 2 - 4);
-    ctx.fillText("✦", rect.width / 2 + Math.min(120, rect.width / 3), rect.height / 2 - 4);
 
     paintedRef.current = true;
     return true;

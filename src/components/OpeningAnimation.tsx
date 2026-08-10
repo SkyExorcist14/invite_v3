@@ -9,14 +9,15 @@ type OpeningAnimationProps = {
 };
 
 /**
- * The envelope opens. The flap lifts back on its top hinge, then a single
- * card rises straight up out of the pocket — perfectly centered — and grows
- * to take over the screen before a soft light wash hands off to the site.
+ * The envelope opens. The flap lifts back on its top hinge, then a card
+ * appears DEAD-CENTRE in front of the envelope and grows to take over the
+ * screen before a soft light wash hands off to the site.
  *
- * Rebuilt to be seamless and centered: the card only ever moves on the Y
- * axis (left-1/2 + -translate-x-1/2 keeps it dead-center), so it can never
- * drift to one side. The envelope fades as the card takes over, so nothing
- * clips it. Self-completes in ~2.4s; reduced-motion users skip straight through.
+ * Centering is done purely with framer's own translate (x:"-50%", y:"-50%")
+ * held constant across every keyframe, so the card scales about its own centre
+ * and can never drift sideways. The card sits at the highest z-index, so it
+ * opens in front of the envelope rather than from behind the pocket.
+ * Self-completes in ~2.4s; reduced-motion users skip straight through.
  */
 export default function OpeningAnimation({ onComplete }: OpeningAnimationProps) {
   const reducedMotion = usePrefersReducedMotion();
@@ -39,10 +40,7 @@ export default function OpeningAnimation({ onComplete }: OpeningAnimationProps) 
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div
-        className="relative h-56 w-80"
-        style={{ perspective: 1200 }}
-      >
+      <div className="relative h-56 w-80" style={{ perspective: 1200 }}>
         {/* ── envelope (fades out as the card takes over) ── */}
         <motion.div
           className="absolute inset-0"
@@ -53,7 +51,7 @@ export default function OpeningAnimation({ onComplete }: OpeningAnimationProps) 
           {/* back panel */}
           <div className="absolute inset-0 rounded-lg border border-gold-400/50 bg-cream-100 shadow-card" />
 
-          {/* front pocket — the card rises from behind this */}
+          {/* front pocket */}
           <svg viewBox="0 0 320 224" className="absolute inset-0 z-20 h-full w-full" preserveAspectRatio="none">
             <path d="M2 224 L160 108 L318 224 Z" fill="#FBF6EC" stroke="#C9A227" strokeWidth="1.2" strokeOpacity="0.45" />
             <path d="M2 2 L2 224 L160 108 Z" fill="#F7EFDB" />
@@ -80,23 +78,24 @@ export default function OpeningAnimation({ onComplete }: OpeningAnimationProps) 
           </motion.svg>
         </motion.div>
 
-        {/* ── the card: rises straight up, centered, then grows ── */}
+        {/* ── the card: centred in front of the envelope, grows into view ── */}
         <motion.div
-          className="absolute left-1/2 top-1/2 z-10 flex h-44 w-64 -translate-x-1/2 flex-col items-center justify-center gap-3 rounded-md border border-gold-400/40 bg-cream-50 px-6 text-center shadow-2xl"
-          style={{ marginTop: "-88px" }}
-          initial={{ y: 60, scale: 0.55, opacity: 0 }}
-          animate={{ y: [60, -6, -6], scale: [0.55, 1, 1.14], opacity: [0, 1, 1] }}
+          className="absolute left-1/2 top-1/2 z-40 flex h-40 w-60 flex-col items-center justify-center rounded-md border border-gold-400/40 bg-cream-50 shadow-2xl"
+          style={{ transformOrigin: "center center" }}
+          initial={{ x: "-50%", y: "-50%", scale: 0.25, opacity: 0 }}
+          animate={{ x: "-50%", y: "-50%", scale: [0.25, 1, 1.12], opacity: [0, 1, 1] }}
           transition={{
-            duration: 1.5,
-            delay: 0.7,
+            duration: 1.45,
+            delay: 0.65,
             ease: [0.22, 1, 0.36, 1],
             times: [0, 0.62, 1],
           }}
         >
-          <p className="font-heading text-4xl leading-none text-gold-600">ੴ</p>
-          <p className="font-body text-[0.7rem] uppercase tracking-[0.35em] text-bark/60">
+          <span className="mb-2 block h-px w-10 bg-gold-400/60" />
+          <p className="font-body text-sm uppercase tracking-[0.4em] text-bark/70">
             You are Invited
           </p>
+          <span className="mt-2 block h-px w-10 bg-gold-400/60" />
         </motion.div>
       </div>
 

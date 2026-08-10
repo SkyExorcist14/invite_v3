@@ -101,13 +101,13 @@ export default function FloralSpray({ className = "", variant = 0 }: FloralSpray
   );
 
   // ── bougainvillea: 3 papery bracts + tiny white flowers (the pink arch look) ──
-  const bougainvillea = (cx: number, cy: number, scale: number, rot = 0) => (
+  const bougainvillea = (cx: number, cy: number, scale: number, rot = 0, grad = "bractPink") => (
     <g transform={`translate(${cx} ${cy}) scale(${scale}) rotate(${rot})`}>
       {[0, 120, 240].map((a) => (
         <path
           key={a}
           d="M0 0 C6 -4 9 -12 5 -19 C2 -22 -2 -22 -5 -19 C-9 -12 -6 -4 0 0 Z"
-          fill={`url(#${gid("bract")})`}
+          fill={`url(#${gid(grad)})`}
           opacity="0.95"
           transform={`rotate(${a})`}
         />
@@ -142,9 +142,16 @@ export default function FloralSpray({ className = "", variant = 0 }: FloralSpray
     </g>
   );
 
-  // small palette rotation per corner so they aren't carbon copies
-  const rosePink = ["#EE6FA1", "#E85C97", "#F07FA8", "#E96BA0"][variant];
-  const peonyBlush = ["#F5A9C4", "#F4B7C9", "#F3A0BE", "#F6AFC7"][variant];
+  // ── vibrant, multi-colour palette per corner so the four together read as a
+  //     rich Indian floral spread (not just pink) ──
+  const pal = [
+    { peony: "#F49AC1", rose: "#E0567B", accentBloom: "#8E5BC7", accent2: "#F3722C", bracts: ["bractPink", "bractPurple", "bractCoral"] },
+    { peony: "#C79BE6", rose: "#B5539E", accentBloom: "#5B8DEF", accent2: "#F0C419", bracts: ["bractPurple", "bractBlue", "bractPink"] },
+    { peony: "#F4A7B9", rose: "#E85C97", accentBloom: "#F3722C", accent2: "#5BA37A", bracts: ["bractCoral", "bractPink", "bractPurple"] },
+    { peony: "#F6B4CC", rose: "#D14D8B", accentBloom: "#7C5BD1", accent2: "#F4A261", bracts: ["bractPink", "bractCoral", "bractBlue"] },
+  ][variant];
+  const rosePink = pal.rose;
+  const peonyBlush = pal.peony;
 
   return (
     <svg viewBox="0 0 200 200" className={className} aria-hidden="true">
@@ -157,12 +164,24 @@ export default function FloralSpray({ className = "", variant = 0 }: FloralSpray
           <stop offset="0%" stopColor="#FBE7A6" />
           <stop offset="100%" stopColor="#E8A93D" />
         </radialGradient>
-        <linearGradient id={gid("bract")} x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gid("bractPink")} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#F04C93" />
           <stop offset="100%" stopColor="#C01A6B" />
         </linearGradient>
+        <linearGradient id={gid("bractPurple")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#A96BE0" />
+          <stop offset="100%" stopColor="#6D2FB0" />
+        </linearGradient>
+        <linearGradient id={gid("bractCoral")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#FB8C5A" />
+          <stop offset="100%" stopColor="#E8551F" />
+        </linearGradient>
+        <linearGradient id={gid("bractBlue")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#6FA8F0" />
+          <stop offset="100%" stopColor="#3563C9" />
+        </linearGradient>
         <radialGradient id={gid("soft")} cx="30%" cy="30%" r="75%">
-          <stop offset="0%" stopColor="#FBD7E6" stopOpacity="0.55" />
+          <stop offset="0%" stopColor="#FBD7E6" stopOpacity="0.5" />
           <stop offset="100%" stopColor="#FBD7E6" stopOpacity="0" />
         </radialGradient>
       </defs>
@@ -203,31 +222,32 @@ export default function FloralSpray({ className = "", variant = 0 }: FloralSpray
       </g>
 
       {/* ══ BLOSSOMS — clustered near the corner, trailing outward ══ */}
-      {/* bougainvillea garland trailing down both edges (the signature look) */}
-      {bougainvillea(120, 34, 1.15, 12)}
-      {bougainvillea(146, 56, 0.95, 40)}
-      {bougainvillea(36, 116, 1.1, -28)}
-      {bougainvillea(58, 146, 0.9, -8)}
-      {bougainvillea(102, 100, 0.85, 64)}
-      {bougainvillea(22, 66, 0.78, -50)}
+      {/* bougainvillea garland trailing down both edges, now in varied colours */}
+      {bougainvillea(120, 34, 1.15, 12, pal.bracts[0])}
+      {bougainvillea(146, 56, 0.95, 40, pal.bracts[1])}
+      {bougainvillea(36, 116, 1.1, -28, pal.bracts[1])}
+      {bougainvillea(58, 146, 0.9, -8, pal.bracts[2])}
+      {bougainvillea(102, 100, 0.85, 64, pal.bracts[0])}
+      {bougainvillea(22, 66, 0.78, -50, pal.bracts[2])}
 
       {/* hero blooms, overlapping into a lush mass */}
       {peony(50, 48, 1.25, peonyBlush, 0)}
       {rose(90, 66, 1.05, rosePink)}
-      {peony(70, 98, 0.92, "#F7C0D4", 18)}
-      {rose(34, 84, 0.8, peonyBlush)}
+      {peony(70, 98, 0.92, pal.accentBloom, 18)}
+      {rose(34, 84, 0.8, pal.accent2)}
 
       {/* buds tucked among the leaves */}
       {bud(128, 74, 1.1, rosePink, 34)}
-      {bud(94, 132, 0.95, "#F5A9C4", 10)}
-      {bud(20, 100, 0.9, peonyBlush, -24)}
+      {bud(94, 132, 0.95, pal.accentBloom, 10)}
+      {bud(20, 100, 0.9, pal.accent2, -24)}
 
-      {/* filler flowers add sparkle */}
+      {/* filler flowers add colourful sparkle */}
       {filler(110, 18, 1, "#FFFFFF", "#F0C419")}
-      {filler(24, 46, 0.9, "#FCE9B0", "#E0218A")}
-      {filler(134, 100, 0.85, "#FFFFFF", "#F0C419")}
-      {filler(60, 72, 0.8, "#F7C0D4", "#F0C419")}
-      {filler(80, 40, 0.72, "#FFFFFF", "#F0C419")}
+      {filler(24, 46, 0.9, pal.accent2, "#FFFFFF")}
+      {filler(134, 100, 0.85, pal.accentBloom, "#FBE7A6")}
+      {filler(60, 72, 0.82, "#5B8DEF", "#FBE7A6")}
+      {filler(80, 40, 0.72, "#FFFFFF", "#E0218A")}
+      {filler(46, 120, 0.72, "#F0C419", "#E8551F")}
     </svg>
   );
 }
