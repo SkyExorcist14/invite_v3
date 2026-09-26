@@ -1,185 +1,253 @@
 "use client";
 
+import { useId } from "react";
+
 type FloralSprayProps = {
+  className?: string;
+  /** Slightly re-weights the palette so repeated corners don't look identical. */
   variant?: 0 | 1 | 2 | 3;
-    className?: string;
 };
 
 /**
- * Realistic botanical corner flourish with gradient-shaded rose blooms,
- * multi-toned foliage with delicate veining, and realistic stamen details.
+ * A dense, layered corner spray of blossoms and foliage — peonies,
+ * bougainvillea, garden roses, buds and filler flowers nestled in rich,
+ * overlapping leaves. Built to read like the lush watercolor floral borders
+ * on premium Indian wedding invitations (bougainvillea arch reference), NOT
+ * the thin fern strands it replaces.
+ *
+ * Drawn in a top-left orientation inside a 200×200 box; flip it into the
+ * other corners with Tailwind's -scale-x-100 / -scale-y-100 utilities.
+ * All gradient ids are namespaced per-instance (useId) so multiple sprays
+ * can share a page without their gradients colliding.
  */
-export default function FloralSpray({ variant = 1, className = "" }: FloralSprayProps) {
-  const isAlt = variant === 2;
+export default function FloralSpray({ className = "", variant = 0 }: FloralSprayProps) {
+  const raw = useId().replace(/[:]/g, "");
+  const gid = (name: string) => `${name}-${raw}`;
+
+  // palette
+  const GREEN_DEEP = "#2F6B41";
+  const GREEN_MID = "#4E9155";
+  const GREEN_SAGE = "#7FB579";
+  const GREEN_LIGHT = "#A9D39A";
+
+  // ── a full peony: soft radial body + two rings of ruffled petals ──
+  const peony = (
+    cx: number,
+    cy: number,
+    scale: number,
+    fill: string,
+    rot = 0
+  ) => (
+    <g transform={`translate(${cx} ${cy}) scale(${scale}) rotate(${rot})`}>
+      <circle r="17" fill={fill} opacity="0.9" />
+      {/* outer ruffle */}
+      {Array.from({ length: 9 }).map((_, i) => (
+        <ellipse
+          key={`o${i}`}
+          cx="0"
+          cy="-13"
+          rx="7.5"
+          ry="11"
+          fill={fill}
+          opacity="0.92"
+          transform={`rotate(${i * 40})`}
+        />
+      ))}
+      {/* inner ruffle, lighter */}
+      {Array.from({ length: 7 }).map((_, i) => (
+        <ellipse
+          key={`i${i}`}
+          cx="0"
+          cy="-7"
+          rx="5"
+          ry="7.5"
+          fill={`url(#${gid("petalLight")})`}
+          opacity="0.95"
+          transform={`rotate(${i * 51 + 25})`}
+        />
+      ))}
+      {/* center */}
+      <circle r="5.5" fill={`url(#${gid("core")})`} />
+      {[0, 72, 144, 216, 288].map((a) => (
+        <circle key={a} r="1.4" cx="0" cy="-3.2" fill="#B8860B" opacity="0.75" transform={`rotate(${a})`} />
+      ))}
+    </g>
+  );
+
+  // ── a garden rose: nested rotated cupped petals spiralling to a swirl ──
+  const rose = (cx: number, cy: number, scale: number, fill: string) => (
+    <g transform={`translate(${cx} ${cy}) scale(${scale})`}>
+      <circle r="15" fill={fill} opacity="0.85" />
+      {[0, 60, 120, 180, 240, 300].map((a) => (
+        <path
+          key={a}
+          d="M0 0 Q10 -4 12 -13 Q0 -17 -12 -13 Q-10 -4 0 0 Z"
+          fill={fill}
+          opacity="0.9"
+          transform={`rotate(${a}) scale(0.95)`}
+        />
+      ))}
+      {[30, 150, 270].map((a) => (
+        <path
+          key={a}
+          d="M0 0 Q7 -3 8 -9 Q0 -12 -8 -9 Q-7 -3 0 0 Z"
+          fill={`url(#${gid("petalLight")})`}
+          opacity="0.95"
+          transform={`rotate(${a})`}
+        />
+      ))}
+      <path d="M-4 -1 Q0 -6 4 -1 Q0 3 -4 -1 Z" fill={`url(#${gid("core")})`} />
+    </g>
+  );
+
+  // ── bougainvillea: 3 papery bracts + tiny white flowers (the pink arch look) ──
+  const bougainvillea = (cx: number, cy: number, scale: number, rot = 0, grad = "bractPink") => (
+    <g transform={`translate(${cx} ${cy}) scale(${scale}) rotate(${rot})`}>
+      {[0, 120, 240].map((a) => (
+        <path
+          key={a}
+          d="M0 0 C6 -4 9 -12 5 -19 C2 -22 -2 -22 -5 -19 C-9 -12 -6 -4 0 0 Z"
+          fill={`url(#${gid(grad)})`}
+          opacity="0.95"
+          transform={`rotate(${a})`}
+        />
+      ))}
+      {[0, 120, 240].map((a) => (
+        <circle key={`c${a}`} r="1.6" cx="0" cy="-11" fill="#FFF6E4" transform={`rotate(${a})`} />
+      ))}
+    </g>
+  );
+
+  const bud = (cx: number, cy: number, scale: number, fill: string, rot = 0) => (
+    <g transform={`translate(${cx} ${cy}) scale(${scale}) rotate(${rot})`}>
+      <path d="M0 0 C-5 -3 -5 -12 0 -16 C5 -12 5 -3 0 0 Z" fill={fill} opacity="0.92" />
+      <path d="M0 2 C-4 0 -5 -7 -2 -10 M0 2 C4 0 5 -7 2 -10" fill="none" stroke={GREEN_MID} strokeWidth="2.4" opacity="0.9" strokeLinecap="round" />
+    </g>
+  );
+
+  const filler = (cx: number, cy: number, scale: number, petal: string, center: string) => (
+    <g transform={`translate(${cx} ${cy}) scale(${scale})`}>
+      {[0, 72, 144, 216, 288].map((a) => (
+        <ellipse key={a} cx="0" cy="-5" rx="3" ry="5" fill={petal} opacity="0.95" transform={`rotate(${a})`} />
+      ))}
+      <circle r="2.3" fill={center} />
+    </g>
+  );
+
+  // ── a leaf: teardrop with a mid-vein ──
+  const leaf = (cx: number, cy: number, rot: number, scale: number, color: string, opacity = 0.9) => (
+    <g transform={`translate(${cx} ${cy}) rotate(${rot}) scale(${scale})`}>
+      <path d="M0 0 C11 -7 11 -23 0 -32 C-11 -23 -11 -7 0 0 Z" fill={color} opacity={opacity} />
+      <path d="M0 -3 L0 -28" stroke="#FFFFFF" strokeWidth="1" opacity="0.22" />
+    </g>
+  );
+
+  // ── vibrant, multi-colour palette per corner so the four together read as a
+  //     rich Indian floral spread (not just pink) ──
+  const pal = [
+    { peony: "#F49AC1", rose: "#E0567B", accentBloom: "#8E5BC7", accent2: "#F3722C", bracts: ["bractPink", "bractPurple", "bractCoral"] },
+    { peony: "#C79BE6", rose: "#B5539E", accentBloom: "#5B8DEF", accent2: "#F0C419", bracts: ["bractPurple", "bractBlue", "bractPink"] },
+    { peony: "#F4A7B9", rose: "#E85C97", accentBloom: "#F3722C", accent2: "#5BA37A", bracts: ["bractCoral", "bractPink", "bractPurple"] },
+    { peony: "#F6B4CC", rose: "#D14D8B", accentBloom: "#7C5BD1", accent2: "#F4A261", bracts: ["bractPink", "bractCoral", "bractBlue"] },
+  ][variant];
+  const rosePink = pal.rose;
+  const peonyBlush = pal.peony;
 
   return (
-    <svg
-      viewBox="0 0 160 160"
-      className={className}
-      aria-hidden="true"
-      style={{ transform: isAlt ? "scaleX(-1)" : "none" }}
-    >
+    <svg viewBox="0 0 200 200" className={className} aria-hidden="true">
       <defs>
-        {/* Soft realistic drop shadow for overlapping petals */}
-        <filter id="petalShadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0.8" dy="1.2" stdDeviation="1.2" floodColor="#2A080C" floodOpacity="0.28" />
-        </filter>
-
-        {/* Deep Rose Radial Gradient */}
-        <radialGradient id="roseGradMain" cx="42%" cy="38%" r="60%">
-          <stop offset="0%" stopColor="#E26D7D" />
-          <stop offset="45%" stopColor="#B82E44" />
-          <stop offset="85%" stopColor="#7A1222" />
-          <stop offset="100%" stopColor="#4A0610" />
+        <radialGradient id={gid("petalLight")} cx="50%" cy="35%" r="70%">
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="#FCE3EC" stopOpacity="0.6" />
         </radialGradient>
-
-        {/* Outer Petal Highlight Gradient */}
-        <radialGradient id="roseGradSoft" cx="35%" cy="30%" r="65%">
-          <stop offset="0%" stopColor="#F7A8B4" />
-          <stop offset="50%" stopColor="#CF4257" />
-          <stop offset="100%" stopColor="#801424" />
+        <radialGradient id={gid("core")} cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stopColor="#FBE7A6" />
+          <stop offset="100%" stopColor="#E8A93D" />
         </radialGradient>
-
-        {/* Blush Accent Flower Gradient */}
-        <radialGradient id="blushGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#FFF2E8" />
-          <stop offset="55%" stopColor="#F3B3A6" />
-          <stop offset="90%" stopColor="#D97A6C" />
-          <stop offset="100%" stopColor="#A84336" />
+        <linearGradient id={gid("bractPink")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#F04C93" />
+          <stop offset="100%" stopColor="#C01A6B" />
+        </linearGradient>
+        <linearGradient id={gid("bractPurple")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#A96BE0" />
+          <stop offset="100%" stopColor="#6D2FB0" />
+        </linearGradient>
+        <linearGradient id={gid("bractCoral")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#FB8C5A" />
+          <stop offset="100%" stopColor="#E8551F" />
+        </linearGradient>
+        <linearGradient id={gid("bractBlue")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#6FA8F0" />
+          <stop offset="100%" stopColor="#3563C9" />
+        </linearGradient>
+        <radialGradient id={gid("soft")} cx="30%" cy="30%" r="75%">
+          <stop offset="0%" stopColor="#FBD7E6" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#FBD7E6" stopOpacity="0" />
         </radialGradient>
-
-        {/* Realistic Leaf Linear Gradient */}
-        <linearGradient id="leafGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#688055" />
-          <stop offset="50%" stopColor="#3B522B" />
-          <stop offset="100%" stopColor="#1E2E14" />
-        </linearGradient>
-
-        <linearGradient id="leafGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#8A9A68" />
-          <stop offset="70%" stopColor="#4D633C" />
-          <stop offset="100%" stopColor="#25361A" />
-        </linearGradient>
-
-        {/* Warm Gold Accent Gradient */}
-        <linearGradient id="goldStemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#FFEAA5" />
-          <stop offset="50%" stopColor="#D4A338" />
-          <stop offset="100%" stopColor="#8C6311" />
-        </linearGradient>
       </defs>
 
-      {/* ── BOTANICAL FOLIAGE & STEMS ── */}
+      {/* soft watercolor wash behind the cluster */}
+      <circle cx="60" cy="60" r="82" fill={`url(#${gid("soft")})`} />
+
+      {/* ══ FOLIAGE (back → front) — a full green mass fanning from the corner
+            and trailing along both edges like a garland cascade ══ */}
       <g>
-        {/* Main Curved Vine */}
-        <path
-          d="M 12 14 C 45 32, 85 48, 142 128"
-          fill="none"
-          stroke="url(#leafGrad1)"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-        />
+        {/* back layer — deep green, large, fills the corner */}
+        {leaf(16, 26, 18, 1.7, GREEN_DEEP, 0.85)}
+        {leaf(44, 16, 48, 1.5, GREEN_DEEP, 0.82)}
+        {leaf(74, 22, 70, 1.4, GREEN_DEEP, 0.8)}
+        {leaf(104, 30, 84, 1.3, GREEN_DEEP, 0.78)}
+        {leaf(136, 44, 96, 1.15, GREEN_DEEP, 0.72)}
+        {leaf(26, 54, 344, 1.55, GREEN_DEEP, 0.82)}
+        {leaf(18, 86, 326, 1.4, GREEN_DEEP, 0.78)}
+        {leaf(30, 120, 312, 1.2, GREEN_DEEP, 0.72)}
+        {leaf(46, 148, 300, 1.05, GREEN_DEEP, 0.68)}
 
-        {/* Leaf 1 - Top Outer */}
-        <g>
-          <path
-            d="M 28 22 C 18 8, 42 2, 54 18 C 42 24, 32 26, 28 22 Z"
-            fill="url(#leafGrad2)"
-            filter="url(#petalShadow)"
-          />
-          <path d="M 28 22 Q 40 14 54 18" fill="none" stroke="#A3B582" strokeWidth="0.8" opacity="0.7" />
-        </g>
+        {/* mid layer */}
+        {leaf(56, 36, 56, 1.3, GREEN_MID, 0.92)}
+        {leaf(88, 40, 82, 1.2, GREEN_MID, 0.9)}
+        {leaf(118, 58, 104, 1.05, GREEN_MID, 0.86)}
+        {leaf(42, 74, 336, 1.25, GREEN_MID, 0.9)}
+        {leaf(30, 104, 320, 1.1, GREEN_MID, 0.86)}
+        {leaf(64, 118, 314, 1.0, GREEN_MID, 0.84)}
+        {leaf(100, 84, 116, 1.0, GREEN_MID, 0.84)}
 
-        {/* Leaf 2 - Mid Left */}
-        <g>
-          <path
-            d="M 18 52 C 2 48, 8 28, 28 36 C 26 48, 22 52, 18 52 Z"
-            fill="url(#leafGrad1)"
-            filter="url(#petalShadow)"
-          />
-          <path d="M 18 52 Q 18 40 28 36" fill="none" stroke="#7A9163" strokeWidth="0.7" opacity="0.6" />
-        </g>
-
-        {/* Leaf 3 - Bottom Extending */}
-        <g>
-          <path
-            d="M 98 108 C 118 126, 128 148, 112 152 C 98 148, 92 126, 98 108 Z"
-            fill="url(#leafGrad2)"
-            filter="url(#petalShadow)"
-          />
-          <path d="M 98 108 Q 106 130 112 152" fill="none" stroke="#B3C493" strokeWidth="0.8" opacity="0.7" />
-        </g>
-
-        {/* Delicate Gold Eucalyptus Sprigs */}
-        <path d="M 45 40 Q 70 20 95 28" fill="none" stroke="url(#goldStemGrad)" strokeWidth="1.2" />
-        <circle cx="62" cy="28" r="3.5" fill="url(#goldStemGrad)" opacity="0.9" />
-        <circle cx="78" cy="24" r="3" fill="url(#goldStemGrad)" opacity="0.9" />
-        <circle cx="92" cy="27" r="2.5" fill="url(#goldStemGrad)" opacity="0.9" />
+        {/* front layer — sage & light, catches the eye */}
+        {leaf(72, 56, 72, 1.0, GREEN_SAGE, 0.95)}
+        {leaf(52, 96, 338, 0.95, GREEN_SAGE, 0.95)}
+        {leaf(112, 92, 122, 0.9, GREEN_SAGE, 0.92)}
+        {leaf(88, 116, 128, 0.82, GREEN_LIGHT, 0.95)}
+        {leaf(36, 128, 326, 0.8, GREEN_LIGHT, 0.95)}
+        {leaf(126, 72, 110, 0.78, GREEN_LIGHT, 0.95)}
       </g>
 
-      {/* ── REALISTIC MAIN ROSE BLOOM ── */}
-      <g transform="translate(58, 58)">
-        {/* Layer 1: Outer Base Petals */}
-        <path
-          d="M -32 -8 C -42 -30, -12 -44, 4 -36 C 24 -44, 46 -24, 38 -2 C 48 18, 28 42, 6 40 C -16 46, -38 28, -32 -8 Z"
-          fill="url(#roseGradMain)"
-          filter="url(#petalShadow)"
-        />
+      {/* ══ BLOSSOMS — clustered near the corner, trailing outward ══ */}
+      {/* bougainvillea garland trailing down both edges, now in varied colours */}
+      {bougainvillea(120, 34, 1.15, 12, pal.bracts[0])}
+      {bougainvillea(146, 56, 0.95, 40, pal.bracts[1])}
+      {bougainvillea(36, 116, 1.1, -28, pal.bracts[1])}
+      {bougainvillea(58, 146, 0.9, -8, pal.bracts[2])}
+      {bougainvillea(102, 100, 0.85, 64, pal.bracts[0])}
+      {bougainvillea(22, 66, 0.78, -50, pal.bracts[2])}
 
-        {/* Layer 2: Intermediate Cupped Petals */}
-        <path
-          d="M -24 -4 C -32 -22, -6 -34, 6 -26 C 20 -32, 34 -16, 28 2 C 34 18, 18 32, 2 30 C -16 34, -28 18, -24 -4 Z"
-          fill="url(#roseGradSoft)"
-        />
+      {/* hero blooms, overlapping into a lush mass */}
+      {peony(50, 48, 1.25, peonyBlush, 0)}
+      {rose(90, 66, 1.05, rosePink)}
+      {peony(70, 98, 0.92, pal.accentBloom, 18)}
+      {rose(34, 84, 0.8, pal.accent2)}
 
-        {/* Layer 3: Inner Petal Spiral & Highlights */}
-        <path
-          d="M -16 -2 C -20 -14, -2 -22, 6 -16 C 16 -20, 24 -8, 18 4 C 22 14, 10 22, 0 20 C -12 22, -18 10, -16 -2 Z"
-          fill="url(#roseGradMain)"
-        />
+      {/* buds tucked among the leaves */}
+      {bud(128, 74, 1.1, rosePink, 34)}
+      {bud(94, 132, 0.95, pal.accentBloom, 10)}
+      {bud(20, 100, 0.9, pal.accent2, -24)}
 
-        {/* Layer 4: Tight Rose Center Core */}
-        <ellipse cx="0" cy="0" rx="8" ry="7" fill="#540813" />
-        <path
-          d="M -5 -2 C -3 -7, 4 -7, 6 -2 C 7 3, -1 7, -5 -2 Z"
-          fill="#F7A8B4"
-          opacity="0.85"
-        />
-        <path d="M -2 -1 C 0 -4, 3 -4, 4 -1" fill="none" stroke="#FFE0E5" strokeWidth="1" />
-      </g>
-
-      {/* ── SECONDARY BLUSH BLOOM ── */}
-      <g transform="translate(112, 48)">
-        {/* Realistic 5-Petal Flower Structure */}
-        {[0, 72, 144, 216, 288].map((angle, i) => (
-          <path
-            key={i}
-            d="M 0 0 C -8 -16, 8 -22, 12 -12 C 16 -2, 4 0, 0 0 Z"
-            fill="url(#blushGrad)"
-            filter="url(#petalShadow)"
-            transform={`rotate(${angle})`}
-          />
-        ))}
-
-        {/* Detailed Golden Center Pistil & Pollen Filaments */}
-        <circle cx="0" cy="0" r="3.5" fill="#7A2215" />
-        {[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => (
-          <g key={angle} transform={`rotate(${angle})`}>
-            <line x1="0" y1="0" x2="0" y2="-5" stroke="#FFE194" strokeWidth="0.6" />
-            <circle cx="0" cy="-5.5" r="0.8" fill="#FFC02B" />
-          </g>
-        ))}
-      </g>
-
-      {/* ── ACCENT ROSEBUD (Top Left) ── */}
-      <g transform="translate(26, 84)">
-        <path d="M -2 12 Q -8 24 -12 30" fill="none" stroke="url(#leafGrad1)" strokeWidth="1.8" />
-        {/* Sepals */}
-        <path d="M -8 2 C -12 -4, -6 -12, 0 -8 C 6 -12, 12 -4, 8 2 Z" fill="url(#leafGrad2)" />
-        {/* Bud Petals */}
-        <path d="M -6 -2 C -10 -14, 0 -20, 6 -14 C 10 -8, 6 2, -6 -2 Z" fill="url(#roseGradSoft)" />
-        <path d="M -3 -6 C -5 -12, 1 -15, 4 -10" fill="none" stroke="#FFA3B1" strokeWidth="0.8" />
-      </g>
+      {/* filler flowers add colourful sparkle */}
+      {filler(110, 18, 1, "#FFFFFF", "#F0C419")}
+      {filler(24, 46, 0.9, pal.accent2, "#FFFFFF")}
+      {filler(134, 100, 0.85, pal.accentBloom, "#FBE7A6")}
+      {filler(60, 72, 0.82, "#5B8DEF", "#FBE7A6")}
+      {filler(80, 40, 0.72, "#FFFFFF", "#E0218A")}
+      {filler(46, 120, 0.72, "#F0C419", "#E8551F")}
     </svg>
   );
 }

@@ -20,12 +20,13 @@ type Drifter = {
   color2: string;
   drift: number;
   rotateStart: number;
-  shape: "flower" | "leaf" | "petal";
+  shape: "flower" | "leaf";
 };
 
 /**
- * High-realism drifting flower blooms, curved petals, and veined foliage.
- * Pre-renders safely to prevent server-client hydration mismatches.
+ * Colorful flowers, leaves, and petals drifting down the page. Random
+ * values are generated AFTER mount (inside useEffect) so server and client
+ * render identically first — this is what prevents the hydration mismatch.
  */
 export default function FloatingPetals({
   colors,
@@ -36,16 +37,17 @@ export default function FloatingPetals({
   const [items, setItems] = useState<Drifter[] | null>(null);
 
   useEffect(() => {
-    const shapes: Drifter["shape"][] = ["flower", "petal", "flower", "leaf", "petal"];
+    // Only flowers and leaves now (no plain petals), weighted toward flowers.
+    const shapes: Drifter["shape"][] = ["flower", "flower", "flower", "leaf", "leaf"];
     const generated: Drifter[] = Array.from({ length: count }).map((_, i) => ({
       id: i,
-      left: Math.random() * 96 + 2,
-      size: 18 + Math.random() * 16,
+      left: Math.random() * 100,
+      size: 16 + Math.random() * 18,
       delay: Math.random() * 8,
-      duration: 12 + Math.random() * 8,
+      duration: 11 + Math.random() * 9,
       color: colors[i % colors.length],
       color2: colors[(i + 2) % colors.length],
-      drift: (Math.random() - 0.5) * 70,
+      drift: (Math.random() - 0.5) * 80,
       rotateStart: Math.random() * 360,
       shape: shapes[i % shapes.length],
     }));
@@ -62,82 +64,39 @@ export default function FloatingPetals({
       {items.map((p) => (
         <motion.svg
           key={p.id}
-          viewBox="0 0 40 40"
+          viewBox="0 0 32 32"
           style={{ left: `${p.left}%`, width: p.size, height: p.size }}
           className="absolute -top-12"
           initial={{ y: -50, x: 0, opacity: 0, rotate: p.rotateStart }}
           animate={{
             y: "112vh",
             x: [0, p.drift, -p.drift * 0.5, 0],
-            opacity: [0, 0.92, 0.92, 0],
-            rotate: p.rotateStart + 280,
+            opacity: [0, 0.9, 0.9, 0],
+            rotate: p.rotateStart + 260,
           }}
           transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "linear" }}
         >
-          <defs>
-            <radialGradient id={`grad-flower-${p.id}`} cx="40%" cy="40%" r="60%">
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-              <stop offset="40%" stopColor={p.color} />
-              <stop offset="100%" stopColor={p.color2} />
-            </radialGradient>
-
-            <linearGradient id={`grad-leaf-${p.id}`} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#8DA375" />
-              <stop offset="50%" stopColor="#4A6134" />
-              <stop offset="100%" stopColor="#253818" />
-            </linearGradient>
-          </defs>
-
-          {/* REALISTIC MULTI-PETAL BLOOM */}
           {p.shape === "flower" && (
-            <g transform="translate(20,20)">
-              {[0, 72, 144, 216, 288].map((angle) => (
-                <path
-                  key={angle}
-                  d="M 0 0 C -6 -14, 6 -18, 10 -10 C 13 -3, 3 0, 0 0 Z"
-                  fill={`url(#grad-flower-${p.id})`}
-                  transform={`rotate(${angle})`}
-                  opacity="0.9"
+            <g>
+              {[0, 72, 144, 216, 288].map((a) => (
+                <ellipse
+                  key={a}
+                  cx="16"
+                  cy="9"
+                  rx="4"
+                  ry="6.5"
+                  fill={p.color}
+                  opacity={0.88}
+                  transform={`rotate(${a} 16 16)`}
                 />
               ))}
-              <circle cx="0" cy="0" r="3" fill="#FFEAA5" />
-              <circle cx="0" cy="0" r="1.5" fill="#C99218" />
+              <circle cx="16" cy="16" r="3.5" fill={p.color2} />
             </g>
           )}
-
-          {/* REALISTIC CURVED ROSE PETAL */}
-          {p.shape === "petal" && (
-            <g transform="translate(20,20)">
-              <path
-                d="M -12 -6 C -16 8, 4 18, 14 8 C 18 -4, 0 -16, -12 -6 Z"
-                fill={`url(#grad-flower-${p.id})`}
-                opacity="0.88"
-              />
-              <path
-                d="M -8 -2 C -10 6, 2 12, 8 6"
-                fill="none"
-                stroke="#FFFFFF"
-                strokeWidth="0.6"
-                opacity="0.4"
-              />
-            </g>
-          )}
-
-          {/* REALISTIC ORGANIC LEAF WITH VEINS */}
           {p.shape === "leaf" && (
-            <g transform="translate(20,20)">
-              <path
-                d="M -14 0 C -8 -14, 12 -12, 16 0 C 8 14, -8 12, -14 0 Z"
-                fill={`url(#grad-leaf-${p.id})`}
-                opacity="0.85"
-              />
-              <path
-                d="M -14 0 Q 0 0 16 0"
-                fill="none"
-                stroke="#B2C79D"
-                strokeWidth="0.8"
-                opacity="0.6"
-              />
+            <g>
+              <path d="M16 3 C27 9 27 23 16 30 C12 22 12 10 16 3 Z" fill={p.color} opacity={0.82} />
+              <path d="M16 5 L16 28" stroke={p.color2} strokeWidth="0.8" opacity={0.5} />
             </g>
           )}
         </motion.svg>
