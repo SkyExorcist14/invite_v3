@@ -1,8 +1,8 @@
 "use client";
 
 type FloralSprayProps = {
-  variant?: 1 | 2;
-  className?: string;
+  variant?: 0 | 1 | 2 | 3;
+    className?: string;
 };
 
 /**
