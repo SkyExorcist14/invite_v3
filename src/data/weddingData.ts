@@ -159,13 +159,9 @@ export const events: WeddingEvent[] = [
 
 // Update this once you have a real RSVP form / WhatsApp number / email.
 export const rsvp = {
-  ready: false,
-  label: "RSVP Link Coming Soon",
-  // When ready is true, set href to your Google Form / WhatsApp / mailto link, e.g.
-  // href: "https://forms.gle/your-form-id"
-  // href: "https://wa.me/11234567890"
-  // href: "mailto:jassimranandmohit@example.com"
-  href: "#",
+  ready: true,
+  label: "RSVP Now",
+  href: "https://docs.google.com/forms/d/e/1FAIpQLSfymhxa05K8awD1RHLNvI35laug7gF6lGu3FxapQ8KCDHIfwQ/viewform?usp=header",
 };
 
 export const music = {
