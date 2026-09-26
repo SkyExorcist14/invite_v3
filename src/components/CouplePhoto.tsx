@@ -44,7 +44,7 @@ export default function CouplePhoto() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/couple.jpg"
+                src="/images/couple.jpeg"
                 alt="Jassimran and Mohit"
                 className="h-[26rem] w-full object-cover"
                 style={{ objectPosition: "center 35%" }}
