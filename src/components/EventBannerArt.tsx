@@ -4,7 +4,7 @@ import { useState } from "react";
 import CoupleSceneIllustration from "./CoupleSceneIllustration";
 
 type EventBannerArtProps = {
-  imagePath: string;
+  imagePath?: string;
   accent: string;
   accentSoft: string;
   decor: "marigold" | "lights" | "petals" | "regal";
@@ -27,6 +27,11 @@ export default function EventBannerArt({
   decor,
 }: EventBannerArtProps) {
   const [failed, setFailed] = useState(false);
+
+  // No artwork assigned yet: intentionally leave the banner area empty.
+  if (!imagePath) {
+    return <div className="relative h-40 w-auto sm:h-48" aria-hidden="true" />;
+  }
 
   if (failed) {
     return (

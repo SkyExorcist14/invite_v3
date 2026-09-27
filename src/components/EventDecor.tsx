@@ -8,188 +8,349 @@ type EventDecorProps = {
   accentSoft: string;
 };
 
-/** A defined marigold bloom (concentric ruffled petal rings) — replaces the
- *  plain "ball" that used to hang on the Haldi garlands. */
-function Marigold({ size = 20, accent = "#E8720C" }: { size?: number; accent?: string }) {
-  const petals = (count: number, r: number, ry: number, fill: string, rot = 0) =>
-    Array.from({ length: count }).map((_, i) => (
-      <ellipse
-        key={`${r}-${i}`}
-        cx="24"
-        cy={24 - r}
-        rx={ry * 0.7}
-        ry={ry}
-        fill={fill}
-        transform={`rotate(${(360 / count) * i + rot} 24 24)`}
-      />
-    ));
+type FlowerProps = {
+  x: number;
+  y: number;
+  size?: number;
+  color: string;
+  secondary: string;
+  center?: string;
+  rotation?: number;
+};
+
+function Flower({
+  x,
+  y,
+  size = 30,
+  color,
+  secondary,
+  center = "#D89A24",
+  rotation = 0,
+}: FlowerProps) {
+  const petals = [
+    [0, -0.42],
+    [0.3, -0.3],
+    [0.42, 0],
+    [0.3, 0.3],
+    [0, 0.42],
+    [-0.3, 0.3],
+    [-0.42, 0],
+    [-0.3, -0.3],
+  ];
+
   return (
-    <svg width={size} height={size} viewBox="0 0 48 48" className="drop-shadow-sm">
-      <circle cx="24" cy="24" r="17" fill={accent} opacity="0.35" />
-      {petals(13, 15, 6, accent)}
-      {petals(11, 11, 5.5, "#F79413", 16)}
-      {petals(9, 7, 4.5, "#FFC53D", 8)}
-      <circle cx="24" cy="24" r="4.2" fill="#FFB300" />
-      <circle cx="24" cy="24" r="2" fill="#E8720C" />
-    </svg>
+    <g transform={`translate(${x} ${y}) rotate(${rotation})`}>
+      <circle r={size * 0.38} fill={secondary} opacity="0.28" />
+      {petals.map(([px, py], i) => (
+        <ellipse
+          key={i}
+          cx={px * size}
+          cy={py * size}
+          rx={size * 0.18}
+          ry={size * 0.34}
+          fill={i % 2 === 0 ? color : secondary}
+          opacity={0.72 + (i % 3) * 0.07}
+          transform={`rotate(${i * 45} ${px * size} ${py * size})`}
+        />
+      ))}
+      <circle r={size * 0.16} fill={center} />
+      <circle r={size * 0.07} fill="#FFF4D6" opacity="0.75" />
+    </g>
   );
 }
 
-/**
- * Ambient, on-theme decoration layered inside each event banner — behind the
- * title text. Deterministic (hydration-safe); every animation is a Tailwind
- * `animate-*` class switched off under prefers-reduced-motion (globals.css).
- *
- *   regal    → Reception : draped fairy lights + a glittery twinkling starfield
- *   lights   → Sangeet   : hanging jewel-tone lights + popping sparkles
- *   marigold → Haldi     : swaying marigold-flower garlands + a soft sun glow
- *   petals   → Anand Karaj: drifting flower petals under a faint sacred arch
- */
-export default function EventDecor({ decor, accent, accentSoft }: EventDecorProps) {
-  if (decor === "regal" || decor === "lights") {
-    const warm = decor === "regal";
-    const bulbColors = warm
-      ? ["#FFE9A8", "#FFD36B", "#FFF3CE"]
-      : [accent, accentSoft, "#FFF3CE"];
-    const bulbs = Array.from({ length: 11 });
+function Leaf({
+  x,
+  y,
+  size = 18,
+  color,
+  rotation = 0,
+}: {
+  x: number;
+  y: number;
+  size?: number;
+  color: string;
+  rotation?: number;
+}) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rotation})`}>
+      <ellipse
+        cx={0}
+        cy={0}
+        rx={size * 0.28}
+        ry={size * 0.62}
+        fill={color}
+        opacity="0.58"
+        transform="rotate(-32)"
+      />
+      <path
+        d={`M0 ${size * 0.45} Q ${size * 0.05} 0 0 ${-size * 0.45}`}
+        fill="none"
+        stroke={color}
+        strokeWidth="0.8"
+        opacity="0.55"
+      />
+    </g>
+  );
+}
 
-    // A dense, glittery starfield for the Reception (more shine).
-    const stars = [
-      [8, 20, 5, 0], [15, 55, 3, 0.6], [23, 30, 6, 1.1], [31, 68, 4, 0.3],
-      [39, 18, 5, 1.5], [46, 50, 3, 0.9], [54, 26, 6, 0.2], [61, 64, 4, 1.3],
-      [69, 22, 5, 0.7], [77, 52, 3, 1.7], [85, 32, 6, 0.4], [92, 60, 4, 1.0],
-      [12, 78, 4, 1.2], [36, 84, 5, 0.5], [58, 82, 4, 1.6], [80, 78, 5, 0.8],
-      [26, 46, 3, 2.0], [66, 44, 4, 0.1], [50, 72, 5, 1.4], [4, 44, 4, 0.9],
-    ];
-
-    return (
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* glittery starfield (reception) */}
-        {warm &&
-          stars.map(([l, t, s, d], i) => (
-            <span
-              key={`st${i}`}
-              className="animate-twinkle absolute rounded-full"
-              style={{
-                left: `${l}%`,
-                top: `${t}%`,
-                width: `${s}px`,
-                height: `${s}px`,
-                background: i % 3 === 0 ? "#FFF6DA" : "#FFD86B",
-                boxShadow: `0 0 ${s + 3}px ${s / 2}px rgba(255,214,107,0.9)`,
-                animationDelay: `${d}s`,
-              }}
-            />
-          ))}
-        {warm &&
-          [[20, 24], [72, 30], [45, 62], [88, 70], [10, 66]].map(([l, t], i) => (
-            <span
-              key={`bg${i}`}
-              className="animate-sparkle absolute text-[0.9rem] text-cream-50"
-              style={{ left: `${l}%`, top: `${t}%`, animationDelay: `${i * 0.6}s` }}
-            >
-              ✦
-            </span>
-          ))}
-
-        {/* draped wire + fairy lights */}
-        <svg viewBox="0 0 400 90" preserveAspectRatio="none" className="absolute inset-x-0 top-0 h-24 w-full">
-          <path d="M-10 8 Q100 44 200 20 T410 12" fill="none" stroke="#00000033" strokeWidth="1.5" />
-        </svg>
-        {bulbs.map((_, i) => {
-          const t = i / (bulbs.length - 1);
-          const left = t * 100;
-          const droop = Math.sin(t * Math.PI) * 26 + (t < 0.5 ? t * 8 : (1 - t) * 8);
-          const color = bulbColors[i % bulbColors.length];
-          return (
-            <span
-              key={i}
-              className="animate-twinkle absolute block h-2.5 w-2.5 rounded-full"
-              style={{
-                left: `calc(${left}% - 5px)`,
-                top: `${8 + droop}px`,
-                background: color,
-                boxShadow: `0 0 8px 2px ${color}`,
-                animationDelay: `${(i % 5) * 0.32}s`,
-              }}
-            />
-          );
-        })}
-        {!warm &&
-          [[16, 30], [82, 24], [30, 70], [70, 62], [50, 44]].map(([l, t], i) => (
-            <span
-              key={`sp${i}`}
-              className="animate-sparkle absolute text-cream-50"
-              style={{ left: `${l}%`, top: `${t}%`, animationDelay: `${i * 0.5}s` }}
-            >
-              ✦
-            </span>
-          ))}
-      </div>
-    );
-  }
-
-  if (decor === "marigold") {
-    // hanging garland strands of marigold FLOWERS swaying from the top edge
-    const strands = [10, 28, 47, 66, 85];
-    return (
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* soft morning sun glow, top-right */}
-        <span
-          className="animate-glow absolute -right-6 -top-6 h-28 w-28 rounded-full blur-2xl"
-          style={{ background: "radial-gradient(circle, #FFE49E 0%, transparent 70%)" }}
-        />
-        {strands.map((left, s) => {
-          const count = 3 + (s % 2);
-          return (
-            <div
-              key={left}
-              className="animate-sway absolute top-0 flex origin-top flex-col items-center"
-              style={{ left: `${left}%`, animationDelay: `${s * 0.4}s` }}
-            >
-              {/* thread */}
-              <span className="h-6 w-px bg-[#E8A24C]/50" />
-              {Array.from({ length: count }).map((_, i) => (
-                <div key={i} className="-mt-1 flex flex-col items-center">
-                  <Marigold size={i === 0 ? 22 : 18} accent={accent} />
-                  {i < count - 1 && <span className="h-2 w-px bg-[#E8A24C]/50" />}
-                </div>
-              ))}
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-
-  // petals — Anand Karaj
-  const petals = [
-    [14, 8, 0], [34, 4, 1.4], [58, 10, 0.6],
-    [80, 6, 2.1], [24, 2, 3.2], [68, 3, 1.1],
+function FloralGarland({
+  primary,
+  secondary,
+  leaf,
+  gold,
+  flowers,
+  dense = false,
+}: {
+  primary: string;
+  secondary: string;
+  leaf: string;
+  gold: string;
+  flowers: Array<[number, number, number]>;
+  dense?: boolean;
+}) {
+  const leaves = [
+    [4, 43, 14, -55], [11, 32, 12, 48], [18, 45, 15, -35],
+    [27, 30, 13, 52], [34, 43, 14, -48], [42, 31, 13, 42],
+    [50, 44, 15, -42], [58, 30, 13, 48], [66, 43, 14, -48],
+    [74, 31, 13, 45], [82, 44, 15, -38], [90, 31, 13, 48],
+    [97, 43, 14, -45],
   ];
+
+  return (
+    <div className="pointer-events-none absolute inset-x-0 top-0 h-[105px] overflow-hidden">
+      <svg
+        viewBox="0 0 1000 120"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 top-0 h-full w-full"
+        aria-hidden="true"
+      >
+        {/* soft watercolor wash behind the garland */}
+        <path
+          d="M-20 34 Q120 8 250 35 T520 32 T790 34 T1020 30"
+          fill="none"
+          stroke={gold}
+          strokeWidth="2"
+          opacity="0.5"
+        />
+        <path
+          d="M-10 38 Q120 14 250 40 T520 37 T790 39 T1010 34"
+          fill="none"
+          stroke={gold}
+          strokeWidth="0.7"
+          opacity="0.35"
+        />
+
+        {/* loose stems */}
+        <path
+          d="M-20 62 Q120 26 245 61 T500 57 T755 61 T1020 55"
+          fill="none"
+          stroke={leaf}
+          strokeWidth="2.2"
+          opacity="0.38"
+        />
+
+        {leaves.map(([x, y, s, r], i) => (
+          <Leaf
+            key={`leaf-${i}`}
+            x={(x / 100) * 1000}
+            y={y}
+            size={s}
+            color={leaf}
+            rotation={r}
+          />
+        ))}
+
+        {/* tiny filler blossoms */}
+        {[7, 23, 39, 55, 71, 87, 96].map((x, i) => (
+          <g key={`filler-${i}`} opacity="0.58">
+            <circle cx={(x / 100) * 1000} cy={25 + (i % 2) * 12} r="2.2" fill="#FFF8E8" />
+            <circle cx={(x / 100) * 1000 + 4} cy={28 + (i % 2) * 12} r="1.8" fill="#FFF8E8" />
+            <circle cx={(x / 100) * 1000 - 3} cy={31 + (i % 2) * 12} r="1.7" fill="#FFF8E8" />
+          </g>
+        ))}
+
+        {flowers.map(([x, y, size], i) => (
+          <Flower
+            key={`flower-${i}`}
+            x={(x / 100) * 1000}
+            y={y}
+            size={size}
+            color={i % 2 === 0 ? primary : secondary}
+            secondary={i % 2 === 0 ? secondary : primary}
+            center={gold}
+            rotation={i % 2 === 0 ? -8 : 7}
+          />
+        ))}
+
+        {dense &&
+          [15, 45, 75].map((x, i) => (
+            <Flower
+              key={`small-${i}`}
+              x={(x / 100) * 1000}
+              y={78 + (i % 2) * 5}
+              size={16}
+              color={secondary}
+              secondary={primary}
+              center={gold}
+              rotation={i * 12}
+            />
+          ))}
+      </svg>
+    </div>
+  );
+}
+
+export default function EventDecor({
+  decor,
+  accent,
+  accentSoft,
+}: EventDecorProps) {
+  if (decor === "marigold") {
+    return (
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <span
+          className="animate-glow absolute -right-8 -top-8 h-32 w-32 rounded-full blur-3xl"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(255,224,150,0.65) 0%, transparent 70%)",
+          }}
+        />
+
+        <FloralGarland
+          primary="#F6C84E"
+          secondary="#F7A85B"
+          leaf="#7D9A6A"
+          gold="#D89A24"
+          flowers={[
+            [7, 86, 30],
+            [24, 82, 36],
+            [42, 88, 31],
+            [61, 82, 36],
+            [79, 88, 31],
+            [95, 83, 36],
+          ]}
+          dense
+        />
+      </div>
+    );
+  }
+
+  if (decor === "lights") {
+    return (
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <FloralGarland
+          primary={accent}
+          secondary={accentSoft}
+          leaf="#557F72"
+          gold="#E6B83F"
+          flowers={[
+            [5, 86, 31],
+            [21, 80, 27],
+            [37, 89, 36],
+            [53, 80, 29],
+            [69, 89, 34],
+            [85, 81, 29],
+            [98, 87, 34],
+          ]}
+          dense
+        />
+
+        {/* restrained jewel-tone fairy lights */}
+        {[12, 29, 46, 63, 80, 94].map((left, i) => (
+          <span
+            key={left}
+            className="animate-twinkle absolute top-[48px] h-2 w-2 rounded-full"
+            style={{
+              left: `${left}%`,
+              background: i % 2 === 0 ? accentSoft : accent,
+              boxShadow: `0 0 9px 2px ${i % 2 === 0 ? accentSoft : accent}`,
+              animationDelay: `${i * 0.3}s`,
+            }}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (decor === "regal") {
+    return (
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <FloralGarland
+          primary="#6C3E83"
+          secondary="#9B1E43"
+          leaf="#7C6A46"
+          gold="#C6A35A"
+          flowers={[
+            [5, 87, 34],
+            [21, 80, 28],
+            [37, 89, 37],
+            [53, 80, 30],
+            [69, 89, 36],
+            [85, 81, 30],
+            [98, 87, 35],
+          ]}
+          dense
+        />
+
+        {[10, 25, 40, 55, 70, 85, 95].map((left, i) => (
+          <span
+            key={left}
+            className="animate-twinkle absolute top-[35px] h-1.5 w-1.5 rounded-full"
+            style={{
+              left: `${left}%`,
+              background: "#FFE7A4",
+              boxShadow: "0 0 8px 2px rgba(255,220,125,0.75)",
+              animationDelay: `${i * 0.45}s`,
+            }}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  // Anand Karaj — blue/orange floral border with a very subtle sacred arch.
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <svg viewBox="0 0 400 200" preserveAspectRatio="none" className="absolute inset-0 h-full w-full opacity-40">
+      <FloralGarland
+        primary="#72B8D8"
+        secondary="#F28A3B"
+        leaf="#739A83"
+        gold="#D8A12D"
+        flowers={[
+          [5, 68, 31],
+          [21, 58, 25],
+          [37, 70, 35],
+          [53, 58, 27],
+          [69, 70, 34],
+          [85, 58, 27],
+          [98, 68, 33],
+        ]}
+        dense
+      />
+
+      <svg
+        viewBox="0 0 400 180"
+        preserveAspectRatio="none"
+        className="absolute inset-x-0 top-0 h-full w-full opacity-25"
+        aria-hidden="true"
+      >
         <path
-          d="M70 200 V96 Q70 34 200 34 Q330 34 330 96 V200"
+          d="M62 180 V88 Q62 30 200 30 Q338 30 338 88 V180"
           fill="none"
           stroke={accentSoft}
           strokeWidth="2"
           strokeLinecap="round"
         />
-        <path d="M188 40 L200 26 L212 40 Z" fill={accent} opacity="0.8" />
+        <path
+          d="M187 35 L200 20 L213 35"
+          fill="none"
+          stroke={accent}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
-      {petals.map(([left, top, delay], i) => (
-        <span
-          key={i}
-          className="animate-float absolute block"
-          style={{ left: `${left}%`, top: `${top}%`, animationDelay: `${delay}s` }}
-        >
-          <svg viewBox="0 0 20 20" className="h-3.5 w-3.5">
-            <ellipse cx="10" cy="10" rx="5" ry="9" fill={i % 2 ? accent : accentSoft} opacity="0.85" />
-          </svg>
-        </span>
-      ))}
     </div>
   );
 }

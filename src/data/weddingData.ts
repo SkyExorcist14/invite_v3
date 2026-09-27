@@ -63,7 +63,30 @@ export type WeddingEvent = {
   locationReady: boolean;
 };
 
-export const events: WeddingEvent[] = [
+export const events: WeddingEvent[] = 
+  {
+    id: "sukhmani-sahib-path",
+    title: "Sukhmani Sahib Path",
+    tagline: "A sacred prayer for blessings and peace.",
+    date: "Wednesday, 9th June 2027",
+    time: "10:00 AM",
+    startIso: "2027-06-09T10:00:00-07:00",
+    endIso: "2027-06-09T12:00:00-07:00",
+    venueAddress: "5404 Amber Circle, Calabasas, CA 91302",
+    theme: "Sukhmani Sahib Path",
+    designNote: "To be designed.",
+    colors: {
+      bgGradient: "from-ivory-50 via-ivory-50 to-ivory-50",
+      accent: "#B8860B",
+      accentSoft: "#E3C567",
+      petalColors: ["#E3C567", "#C9A227", "#F4EAD3"],
+      decor: "petals",
+    },
+    imagePath: "",
+    locationReady: true,
+  },
+
+[
   {
     id: "haldi",
     title: "Haldi Hai Rachne Wali",
