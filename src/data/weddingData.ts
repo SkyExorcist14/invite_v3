@@ -63,7 +63,7 @@ export type WeddingEvent = {
   locationReady: boolean;
 };
 
-export const events: WeddingEvent[] = 
+export const events: WeddingEvent[] = [
   {
     id: "sukhmani-sahib-path",
     title: "Sukhmani Sahib Path",
@@ -85,8 +85,6 @@ export const events: WeddingEvent[] =
     imagePath: "",
     locationReady: true,
   },
-
-[
   {
     id: "haldi",
     title: "Haldi Hai Rachne Wali",

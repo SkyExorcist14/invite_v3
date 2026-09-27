@@ -33,7 +33,7 @@ export default function EventBannerArt({
     return <div className="relative h-40 w-auto sm:h-48" aria-hidden="true" />;
   }
 
-  if (failed) {
+  if (failed || !imagePath) {
     return (
       <CoupleSceneIllustration
         accent={accent}
