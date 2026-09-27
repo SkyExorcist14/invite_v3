@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, CalendarPlus, Copy, Check } from "lucide-react";
-import GarlandBorder from "./GarlandBorder";
 import EventBannerArt from "./EventBannerArt";
 import EventDecor from "./EventDecor";
 import OrnamentalDivider from "./OrnamentalDivider";
@@ -70,11 +69,6 @@ export default function EventCard({ event }: EventCardProps) {
         transition={{ duration: 0.65 }}
         className="overflow-hidden rounded-[1.75rem] border border-black/5 bg-white shadow-card ring-1 ring-gold-400/10"
       >
-        {/* garland trim, sits on the white card edge above the colored banner */}
-        <GarlandBorder
-          colors={[colors.petalColors[0], colors.petalColors[1] ?? colors.petalColors[0], colors.accent]}
-        />
-
         {/* COLORED BANNER — the only place this event's palette appears */}
         <div
           className={`relative flex h-64 flex-col items-center justify-end gap-1.5 overflow-hidden bg-gradient-to-br px-6 pb-7 pt-4 text-center sm:h-80 ${colors.bgGradient}`}
