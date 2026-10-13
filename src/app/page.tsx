@@ -38,15 +38,18 @@ export default function Home() {
 
   return (
     <main className="relative">
-    <FloatingPetals
-      colors={OPEN_PAGE_PETAL_COLORS}
-      count={80}
-    />
 
     <MusicControl ref={musicRef} visible={stage === "open"} />
 
       <AnimatePresence>
-        {stage === "closed" && <LandingCard key="landing" onOpen={handleOpenCard} />}
+        {stage === "closed" && (
+    <>
+      <LandingCard
+        key="landing"
+        onOpen={handleOpenCard}
+      />
+    </>
+  )}
       </AnimatePresence>
 
       <AnimatePresence>
