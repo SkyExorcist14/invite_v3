@@ -1,14 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import FloatingPetals from "./FloatingPetals";
 import FloatingLanterns from "./FloatingLanterns";
 import OrnamentalDivider from "./OrnamentalDivider";
-import FloralSpray from "./FloralSpray";
 import { couple } from "@/data/weddingData";
-
-// Bright, full Indian-wedding color spread.
-const HERO_PETAL_COLORS = ["#E0218A", "#F0C419", "#7FA86E", "#357A8C", "#F3722C", "#9B2D45"];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
@@ -21,13 +16,17 @@ export default function MainInvitation() {
       {/* warm sky lanterns drifting up behind everything */}
       <FloatingLanterns count={7} />
 
-      <FloatingPetals colors={HERO_PETAL_COLORS} count={26} />
-
-      {/* lush floral corners framing the whole section (bougainvillea + peonies) */}
-      <FloralSpray variant={0} className="pointer-events-none absolute -left-8 -top-8 h-52 w-52 sm:h-72 sm:w-72" />
-      <FloralSpray variant={1} className="pointer-events-none absolute -right-8 -top-8 h-52 w-52 -scale-x-100 sm:h-72 sm:w-72" />
-      <FloralSpray variant={2} className="pointer-events-none absolute -bottom-8 -left-8 h-52 w-52 -scale-y-100 sm:h-72 sm:w-72" />
-      <FloralSpray variant={3} className="pointer-events-none absolute -bottom-8 -right-8 h-52 w-52 -scale-100 sm:h-72 sm:w-72" />
+      {/* Real botanical floral artwork replaces the hand-drawn SVG flowers. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/realistic-floral-corner.png" alt="" className="absolute -left-5 -top-4 w-44 sm:w-72 mix-blend-multiply" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/realistic-floral-corner.png" alt="" className="absolute -right-5 -top-4 w-44 -scale-x-100 sm:w-72 mix-blend-multiply" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/realistic-floral-corner.png" alt="" className="absolute -bottom-5 -left-5 w-40 -rotate-90 sm:w-64 mix-blend-multiply" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/realistic-floral-corner.png" alt="" className="absolute -bottom-5 -right-5 w-40 rotate-90 -scale-x-100 sm:w-64 mix-blend-multiply" />
+      </div>
 
       <div className="relative mx-auto max-w-2xl">
         {/* decorative frame */}

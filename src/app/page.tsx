@@ -8,8 +8,6 @@ import MainInvitation from "@/components/MainInvitation";
 import ScratchDateReveal from "@/components/ScratchDateReveal";
 import CountdownTimer from "@/components/CountdownTimer";
 import EventCard from "@/components/EventCard";
-import FloatingPetals from "@/components/FloatingPetals";
-import FloralSpray from "@/components/FloralSpray";
 import CouplePhoto from "@/components/CouplePhoto";
 import OrnamentalDivider from "@/components/OrnamentalDivider";
 import MusicControl, { MusicControlHandle } from "@/components/MusicControl";
@@ -19,9 +17,7 @@ import { events } from "@/data/weddingData";
 
 type Stage = "closed" | "opening" | "open";
 
-const SITE_PETAL_COLORS = [
-  "#357A8C", "#E0218A", "#F0C419", "#9B2D45", "#7FA86E", "#81D8D0", "#F3722C",
-];
+
 
 const sectionFade = {
   hidden: { opacity: 0, y: 24 },
@@ -62,10 +58,6 @@ export default function Home() {
           <MainInvitation />
 
           <div className="relative overflow-hidden bg-gradient-to-b from-ivory-50 via-ivory-100 to-ivory-50 px-5 py-14 sm:px-6 sm:py-20">
-            <FloatingPetals colors={SITE_PETAL_COLORS} count={30} />
-            <FloralSpray variant={2} className="pointer-events-none absolute -left-8 top-0 h-48 w-48 sm:h-64 sm:w-64" />
-            <FloralSpray variant={3} className="pointer-events-none absolute -right-8 top-0 h-48 w-48 -scale-x-100 sm:h-64 sm:w-64" />
-
             {/* ── SAVE THE DATE ── */}
             <motion.div
               initial="hidden"
