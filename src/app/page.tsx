@@ -59,7 +59,7 @@ export default function Home() {
         >
           <FloatingPetals
             colors={OPEN_PAGE_PETAL_COLORS}
-            count={32}
+            count={80}
           />
           <MainInvitation />
 
