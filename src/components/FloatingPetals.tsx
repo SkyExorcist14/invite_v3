@@ -51,7 +51,7 @@ export default function FloatingPetals({ colors, count = 80, className = "" }: F
   if (reducedMotion || !items) return null;
 
   return (
-    <div className={`pointer-events-none fixed inset-0 z-20 overflow-hidden ${className}`} aria-hidden="true">
+    <div className={`pointer-events-none absolute inset-0 z-20 overflow-hidden ${className}`} aria-hidden="true">
       {items.map((p) => (
         <motion.svg
           key={p.id}
