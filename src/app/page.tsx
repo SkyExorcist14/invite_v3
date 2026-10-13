@@ -38,7 +38,12 @@ export default function Home() {
 
   return (
     <main className="relative">
-      <MusicControl ref={musicRef} visible={stage === "open"} />
+    <FloatingPetals
+      colors={OPEN_PAGE_PETAL_COLORS}
+      count={80}
+    />
+
+    <MusicControl ref={musicRef} visible={stage === "open"} />
 
       <AnimatePresence>
         {stage === "closed" && <LandingCard key="landing" onOpen={handleOpenCard} />}

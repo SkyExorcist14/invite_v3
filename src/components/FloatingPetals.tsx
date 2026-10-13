@@ -26,7 +26,7 @@ type Drifter = {
 
 /** Subtle botanical debris drifting through the page: curved petals, veined leaves,
  * and a few small layered blossoms. Random values are generated after mount to avoid hydration mismatch. */
-export default function FloatingPetals({ colors, count = 100, className = "" }: FloatingPetalsProps) {
+export default function FloatingPetals({ colors, count = 80, className = "" }: FloatingPetalsProps) {
   const reducedMotion = usePrefersReducedMotion();
   const [items, setItems] = useState<Drifter[] | null>(null);
 
@@ -51,7 +51,7 @@ export default function FloatingPetals({ colors, count = 100, className = "" }: 
   if (reducedMotion || !items) return null;
 
   return (
-    <div className={`pointer-events-none absolute inset-0 z-20 overflow-hidden ${className}`} aria-hidden="true">
+    <div className={`pointer-events-none fixed inset-0 z-20 overflow-hidden ${className}`} aria-hidden="true">
       {items.map((p) => (
         <motion.svg
           key={p.id}
