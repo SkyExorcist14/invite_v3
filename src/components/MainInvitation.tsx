@@ -16,19 +16,37 @@ export default function MainInvitation() {
       {/* warm sky lanterns drifting up behind everything */}
       <FloatingLanterns count={7} />
 
-      {/* Real botanical floral artwork replaces the hand-drawn SVG flowers. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* Transparent botanical corner sprays. The empty parts of the PNG stay transparent,
+          so the flowers taper into the ivory background instead of showing a rectangular edge. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/realistic-floral-corner.png" alt="" className="absolute -left-5 -top-4 w-44 sm:w-72 mix-blend-multiply" />
+        <img
+          src="/images/realistic-floral-corner.png"
+          alt=""
+          className="absolute -left-10 -top-8 w-[min(70vw,27rem)] sm:-left-12 sm:-top-10 sm:w-[min(46vw,35rem)]"
+        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/realistic-floral-corner.png" alt="" className="absolute -right-5 -top-4 w-44 -scale-x-100 sm:w-72 mix-blend-multiply" />
+        <img
+          src="/images/realistic-floral-corner.png"
+          alt=""
+          className="absolute -right-10 -top-8 w-[min(70vw,27rem)] -scale-x-100 sm:-right-12 sm:-top-10 sm:w-[min(46vw,35rem)]"
+        />
+        {/* Mirror vertically for the lower corners, keeping foliage on the outside edges. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/realistic-floral-corner.png" alt="" className="absolute -bottom-5 -left-5 w-40 -rotate-90 sm:w-64 mix-blend-multiply" />
+        <img
+          src="/images/realistic-floral-corner.png"
+          alt=""
+          className="absolute -bottom-12 -left-10 w-[min(62vw,24rem)] -scale-y-100 sm:-bottom-16 sm:-left-12 sm:w-[min(38vw,29rem)]"
+        />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/realistic-floral-corner.png" alt="" className="absolute -bottom-5 -right-5 w-40 rotate-90 -scale-x-100 sm:w-64 mix-blend-multiply" />
+        <img
+          src="/images/realistic-floral-corner.png"
+          alt=""
+          className="absolute -bottom-12 -right-10 w-[min(62vw,24rem)] -scale-x-100 -scale-y-100 sm:-bottom-16 sm:-right-12 sm:w-[min(38vw,29rem)]"
+        />
       </div>
 
-      <div className="relative mx-auto max-w-2xl">
+      <div className="relative z-10 mx-auto max-w-2xl">
         {/* decorative frame */}
         <div className="pointer-events-none absolute inset-0 rounded-[2rem] border border-gold-400/40" />
         <div className="pointer-events-none absolute inset-2 rounded-[1.7rem] border border-gold-400/20" />

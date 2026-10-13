@@ -20,11 +20,26 @@ export default function CouplePhoto() {
       transition={{ duration: 0.8 }}
       className="relative mx-auto mt-20 flex max-w-md flex-col items-center sm:mt-24"
     >
-      {/* frame */}
+      {/* A light botanical garland frames the outside of the arch. The transparent artwork
+          trails away at the edges, while the gold frame keeps the photograph unobstructed. */}
       <div className="relative w-full max-w-[22rem]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/realistic-floral-corner.png"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-6 -top-8 z-20 w-32 sm:-left-8 sm:-top-10 sm:w-44"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/realistic-floral-corner.png"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-6 -top-8 z-20 w-32 -scale-x-100 sm:-right-8 sm:-top-10 sm:w-44"
+        />
         {/* outer gold arch frame */}
         <div
-          className="relative overflow-hidden rounded-b-2xl p-[3px] shadow-card"
+          className="relative z-10 overflow-hidden rounded-b-2xl p-[3px] shadow-card"
           style={{
             borderTopLeftRadius: "11rem",
             borderTopRightRadius: "11rem",
